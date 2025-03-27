@@ -11,6 +11,7 @@ yarn-error.log
 
 # ログファイル
 *.log
+logs/
 
 # エディタの設定
 .vscode/
@@ -33,7 +34,6 @@ out/
 
 # 特定のファイル
 data/*.csv
-logs/*.csv
 
 # 秘密鍵ファイル
 *.json
