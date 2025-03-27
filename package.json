@@ -1,0 +1,15 @@
+{
+	"name": "multi-send",
+	"version": "1.0.0",
+	"description": "Solana batch transfer script",
+	"main": "solana-batch-transfer.js",
+	"scripts": {
+		"start": "node solana-batch-transfer.js"
+	},
+	"dependencies": {
+		"@solana/web3.js": "^1.87.6",
+		"bs58": "^5.0.0",
+		"csv-parser": "^3.0.0",
+		"csv-writer": "^1.6.0"
+	}
+}

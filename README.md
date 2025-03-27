@@ -1,129 +1,151 @@
-# Solana バッチ送金ツール
+# Multi-Send Solana
 
-このツールは、Solana ブロックチェーン上で複数のウォレットアドレスに効率的に SOL を送金するためのスクリプトです。1 つのトランザクションで最大 20 アドレスに同時に送金できるため、トランザクション手数料を大幅に削減できます。
+複数の Solana ウォレットに同時に SOL を送金するためのスクリプトです。
 
-## 特徴
+## 機能
 
-- 1 トランザクションで最大 20 アドレスへの送金
-- CSV ファイルからのウォレットアドレス一括読み込み
-- トランザクション結果の自動記録
-- カスタム RPC エンドポイントのサポート
-- バッチ処理による大量ウォレットへの効率的な送金
-- 詳細なエラーハンドリングと再試行オプション
-- 送金状況のリアルタイム表示
-- 送金結果のログ出力
+- CSV ファイルから複数の送金先アドレスを読み込み
+- バッチ処理による効率的な送金
+- 送金結果の CSV ファイル出力
+- テストネット/デブネットでのテスト機能
+- エラーハンドリングとリトライ機能
 
-## 前提条件
+## 必要条件
 
-- Node.js（バージョン 14 以上推奨）
+- Node.js v16 以上
 - npm または yarn
-- @solana/web3.js
-- @solana/spl-token
+- Solana ウォレット（送信元）
+- Solana CLI（テスト用）
 
 ## セットアップ
 
-1. リポジトリをクローン
+1. リポジトリをクローン:
 
 ```bash
-git clone https://github.com/camaocande/multi-send-sol.git
-cd multi-send-sol
+git clone https://github.com/yourusername/multi-send.git
+cd multi-send
 ```
 
-2. 依存パッケージをインストール
+2. 依存パッケージをインストール:
 
 ```bash
 npm install
 ```
 
-または
-
-```bash
-yarn install
-```
-
-3. 設定を準備
-
-- `xxx.json` - 送信元の Solana キーペア JSON ファイル
-- `wallets.csv` - 送金先ウォレットアドレスリスト
+3. 送信元のキーファイルを設定:
+   - 送信元のウォレットの秘密鍵を JSON ファイルとして保存
+   - デフォルトでは `xxx.json` という名前で保存
 
 ## 使用方法
 
-### 基本的な実行方法
+### メインネットでの実行
 
 ```bash
 node solana-batch-transfer.js
 ```
 
-### カスタム RPC エンドポイントを指定する場合
+### テストネットでの実行
 
 ```bash
-node solana-batch-transfer.js https://your-custom-rpc-endpoint.com
+node solana-batch-transfer.js testnet
 ```
 
-または環境変数として設定：
+### デブネットでの実行
 
 ```bash
-RPC_URL=https://your-custom-rpc-endpoint.com node solana-batch-transfer.js
+node solana-batch-transfer.js devnet
 ```
 
-### CSV 形式
+### テスト用のキーペア生成
 
-最もシンプルな CSV 形式：
+## テストネット/デブネットでのテスト
 
+1. テスト用のキーペアを生成:
+
+```bash
+node generate-test-wallet.js
 ```
+
+2. テストネット/デブネットで SOL を取得:
+
+   ### CLI を使用する場合
+
+   ```bash
+   # テストネットの場合
+   solana airdrop 1 <公開鍵> --url https://api.testnet.solana.com
+
+   # デブネットの場合
+   solana airdrop 1 <公開鍵> --url https://api.devnet.solana.com
+   ```
+
+   ### Web Faucet を使用する場合
+
+   - [Solana Faucet](https://solfaucet.com/) にアクセス
+   - 生成した公開鍵を入力して SOL を取得
+
+3. テスト用の CSV ファイルを作成:
+
+```csv
 wallet_address
-7KkMnQMz41jFS7xi5L2p8g43BCjHY11SSZZnAEANPS2e
-3zXeqNcyoFPdAyTEXnBTtvKxn4y9zh3c8jsFPM3DgXLs
-...
+<テスト用の送金先アドレス1>
+<テスト用の送金先アドレス2>
 ```
 
-ヘッダーがある場合は、`wallet_address` または `address` という列名を使用してください。
+4. スクリプトを実行:
+
+```bash
+# テストネットの場合
+node solana-batch-transfer.js testnet
+
+# デブネットの場合
+node solana-batch-transfer.js devnet
+```
 
 ## 設定オプション
 
-スクリプト内の `CONFIG` オブジェクトで以下のパラメータを変更できます：
+`solana-batch-transfer.js` の `CONFIG` オブジェクトで以下の設定が可能です：
 
-- `keyPath`: 送信元のキーファイルのパス（デフォルト: './xxx.json'）
-- `csvPath`: 送金先アドレスの CSV ファイルパス（デフォルト: './wallets.csv'）
-- `outputPath`: 結果を保存する CSV ファイルパス（デフォルト: './distribution_results.csv'）
-- `solPerWallet`: 1 ウォレットあたりの送金額（SOL）（デフォルト: 0.1）
-- `batchSize`: 1 トランザクションあたりの最大送金数（デフォルト: 20）
-- `rpcUrl`: デフォルトの RPC URL
-- `confirmationLevel`: トランザクション確認レベル（'confirmed' または 'finalized'）
-- `DELAY_BETWEEN_TRANSFERS`: 送金間隔（ミリ秒）
-- `MAX_RETRIES`: エラー時の最大リトライ回数
-- `RETRY_DELAY`: リトライ間隔（ミリ秒）
+- `keyPath`: 送信元のキーファイルパス
+- `csvPath`: 送信先アドレスの CSV ファイルパス
+- `outputPath`: 結果を保存する CSV ファイルパス（自動的に日時付きのファイル名が生成されます）
+- `solPerWallet`: 1 ウォレットあたりの送金額 (SOL)
+- `batchSize`: 1 トランザクションあたりの最大送金数
+- `network`: 使用するネットワーク (mainnet/testnet/devnet)
+- `rpcUrl`: カスタム RPC URL
+- `confirmationLevel`: トランザクション確認レベル
 
 ## 結果ファイル
 
-スクリプトは処理結果を `distribution_results.csv` ファイルに出力します。各行には以下の情報が含まれます：
+送金結果は以下の形式の CSV ファイルに保存されます：
 
-- `wallet_address`: 送金先のウォレットアドレス
-- `status`: 送金状態（'success' または 'failed'）
-- `transaction_signature`: 成功したトランザクションの署名（失敗の場合は 'N/A'）
-- `timestamp`: 処理が行われた日時
-- `batch_number`: どのバッチで処理されたか
+```csv
+wallet_address,status,transaction_signature,timestamp,batch_number
+<送金先アドレス>,success/failed,<トランザクション署名>,<タイムスタンプ>,<バッチ番号>
+```
 
 ## 注意事項
 
-- スクリプト実行前に十分な SOL 残高があることを確認してください
-- Solana ネットワークの混雑状況によっては、バッチサイズを小さくする必要がある場合があります
-- デフォルトでは 1 トランザクションあたり最大 20 アドレスに送金します
-- 送金先アドレスの形式が正しいことを確認してください
-- 送金金額は SOL 単位で指定してください
+- 送金前に十分な SOL 残高があることを確認してください
+- テストネット/デブネットでは、より大きな金額でテストが可能です
+- 秘密鍵は安全に管理し、公開しないでください
+- テスト用のキーペアは本番環境では使用しないでください
 
 ## トラブルシューティング
 
-1. 送金が失敗する場合
+1. 残高不足エラー
 
-   - 送金元のウォレットに十分な SOL があるか確認
-   - 送金先アドレスの形式が正しいか確認
-   - ネットワーク接続を確認
+   - 送信元ウォレットの残高を確認
+   - テストネット/デブネットの場合は、Faucet から SOL を取得
 
-2. プログラムが応答しない場合
-   - 送金間隔を長く設定してみる
-   - 送金先の数を減らしてみる
-   - バッチサイズを小さくしてみる
+2. トランザクション失敗
+
+   - RPC ノードの状態を確認
+   - ネットワークの混雑状況を確認
+   - バッチサイズを小さくして再試行
+
+3. キーファイルエラー
+   - キーファイルのパスが正しいか確認
+   - キーファイルの形式が正しいか確認
 
 ## ライセンス
 
@@ -131,9 +153,13 @@ MIT
 
 ## 作者
 
-camaocande
+camao
 
 ## 貢献
 
 バグ報告や機能改善の提案は、GitHub の Issue でお願いします。
 プルリクエストも歓迎です。
+
+```
+
+```

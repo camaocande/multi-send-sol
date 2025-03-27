@@ -33,4 +33,15 @@ out/
 
 # 特定のファイル
 data/*.csv
-logs/*.json 
+logs/*.json
+
+# 秘密鍵ファイル
+*.json
+!package.json
+!package-lock.json
+
+# ログディレクトリ
+logs/
+
+# 環境変数
+.env 
