@@ -33,7 +33,7 @@ out/
 
 # 特定のファイル
 data/*.csv
-logs/*.json
+logs/*.csv
 
 # 秘密鍵ファイル
 *.json
