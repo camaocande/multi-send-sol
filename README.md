@@ -32,9 +32,6 @@ npm install
 1. 送信元のウォレットを準備:
 
 ```bash
-# 通常のウォレット生成
-node generate-test-wallet.js
-
 # または、バニティアドレスを生成
 solana-keygen grind --starts-with <希望の文字列>:1 --outfile test-wallet.json
 ```
