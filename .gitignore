@@ -1,0 +1,36 @@
+# 依存関係
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# 環境設定
+.env
+.env.local
+.env.*.local
+
+# ログファイル
+*.log
+
+# エディタの設定
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OSの設定
+.DS_Store
+Thumbs.db
+
+# ビルド出力
+dist/
+build/
+out/
+
+# 一時ファイル
+*.tmp
+*.temp
+
+# 特定のファイル
+data/*.csv
+logs/*.json 
