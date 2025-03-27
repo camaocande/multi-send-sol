@@ -40,8 +40,5 @@ logs/*.json
 !package.json
 !package-lock.json
 
-# ログディレクトリ
-logs/
-
 # 環境変数
 .env 
