@@ -1,0 +1,15 @@
+{
+  "name": "solana-batch-transfer",
+  "version": "1.0.0",
+  "description": "複数のウォレットにSOLを一括で送金するスクリプト",
+  "main": "solana-batch-transfer.js",
+  "scripts": {
+    "start": "node solana-batch-transfer.js"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.87.1",
+    "bs58": "^5.0.0",
+    "csv-parser": "^3.0.0",
+    "csv-writer": "^1.6.0"
+  }
+}
