@@ -1,94 +1,60 @@
 # Multi-Send Solana
 
-複数の Solana ウォレットに同時に SOL を送金するためのスクリプトです。
+Solana の複数ウォレットへの一括送金スクリプト
 
 ## 機能
 
-- CSV ファイルから複数の送金先アドレスを読み込み
+- 複数のウォレットアドレスへの一括送金
 - バッチ処理による効率的な送金
 - 送金結果の CSV ファイル出力
-- テストネット/デブネットでのテスト機能
-- エラーハンドリングとリトライ機能
+- テストネット/デブネット対応
+- バニティアドレス対応
 
 ## 必要条件
 
 - Node.js v16 以上
 - npm または yarn
-- Solana ウォレット（送信元）
 - Solana CLI（テスト用）
 
-## セットアップ
-
-1. リポジトリをクローン:
+## インストール
 
 ```bash
-git clone https://github.com/yourusername/multi-send.git
-cd multi-send
-```
+# リポジトリをクローン
+git clone https://github.com/camaocande/multi-send-sol.git
+cd multi-send-sol
 
-2. 依存パッケージをインストール:
-
-```bash
+# 依存パッケージをインストール
 npm install
 ```
 
-3. 送信元のキーファイルを設定:
-   - 送信元のウォレットの秘密鍵を JSON ファイルとして保存
-   - デフォルトでは `xxx.json` という名前で保存
-
 ## 使用方法
 
-### メインネットでの実行
+1. 送信元のウォレットを準備:
 
 ```bash
-node solana-batch-transfer.js
-```
-
-### テストネットでの実行
-
-```bash
-node solana-batch-transfer.js testnet
-```
-
-### デブネットでの実行
-
-```bash
-node solana-batch-transfer.js devnet
-```
-
-### テスト用のキーペア生成
-
-## テストネット/デブネットでのテスト
-
-1. テスト用のキーペアを生成:
-
-```bash
+# 通常のウォレット生成
 node generate-test-wallet.js
+
+# または、バニティアドレスを生成
+solana-keygen grind --starts-with <希望の文字列>:1 --outfile test-wallet.json
 ```
 
-2. テストネット/デブネットで SOL を取得:
+2. テストネット/デブネット用の SOL を取得:
 
-   ### CLI を使用する場合
+```bash
+# テストネットの場合
+solana airdrop 1 <ウォレットアドレス> --url https://api.testnet.solana.com
 
-   ```bash
-   # テストネットの場合
-   solana airdrop 1 <公開鍵> --url https://api.testnet.solana.com
+# デブネットの場合
+solana airdrop 1 <ウォレットアドレス> --url https://api.devnet.solana.com
+```
 
-   # デブネットの場合
-   solana airdrop 1 <公開鍵> --url https://api.devnet.solana.com
-   ```
-
-   ### Web Faucet を使用する場合
-
-   - [Solana Faucet](https://solfaucet.com/) にアクセス
-   - 生成した公開鍵を入力して SOL を取得
-
-3. テスト用の CSV ファイルを作成:
+3. 送信先アドレスの CSV ファイルを準備:
 
 ```csv
 wallet_address
-<テスト用の送金先アドレス1>
-<テスト用の送金先アドレス2>
+<送金先アドレス1>
+<送金先アドレス2>
 ```
 
 4. スクリプトを実行:
