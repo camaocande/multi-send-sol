@@ -21,9 +21,9 @@ const CONFIG = {
 	csvPath: "./data/20250312.csv", // 送信先アドレスのCSVファイル
 	outputPath: `./logs/distribution_results_${new Date()
 		.toISOString()
-		.replace(/[:.]/g, "-")}.csv`, // 結果を保存するCSVファイル（日時付き）
-	solPerWallet: 0.001, // 1ウォレットあたりの送金額 (SOL)
-	batchSize: 20, // 1トランザクションあたりの最大送金数
+		.replace(/[:.]/g, "-")}_${process.argv[2] || "mainnet"}.csv`, // 結果を保存するCSVファイル（日時付き、ネットワーク名付き）
+	solPerWallet: 0.1, // 1ウォレットあたりの送金額 (SOL)
+	batchSize: 20, // 1トランザクションあたりの最大送金数（トランザクションサイズ制限に合わせて調整）
 	network: process.argv[2] || "mainnet", // ネットワーク選択 (mainnet/testnet/devnet)
 	rpcUrl: getNetworkRpcUrl(process.argv[2] || "mainnet"), // ネットワークに応じたRPC URL
 	confirmationLevel: "confirmed", // トランザクション確認レベル ('confirmed' or 'finalized')
@@ -346,12 +346,6 @@ async function main() {
 					break;
 				}
 			}
-		}
-
-		// バッチ間に少し待機（レート制限を避けるため）
-		if (i < batches.length - 1) {
-			console.log("次のバッチを処理する前に5秒待機中...");
-			await new Promise((resolve) => setTimeout(resolve, 5000));
 		}
 	}
 
